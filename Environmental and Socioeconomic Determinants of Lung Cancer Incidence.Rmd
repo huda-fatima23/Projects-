@@ -1,5 +1,5 @@
 ####################################################################################
-# Project name : "Final Project"
+# Project name : "LUNG CANCER Project"
 
 # Code author name : Huda Fatima, Mohd Adnaan Khan, Amina Khatun
 
@@ -524,3 +524,4 @@ log_PM2.5 and log_Sociod_EQI were positively and significantly associated with l
 log_Built_EQI and log_CO showed significant negative associations with lung cancer incidence. Regions with better infrastructure, housing, and urban design may have lower lung cancer rates. And in case of CO may be higher in rural areas with fewer cancer diagnoses,
 
 All assumptions of multiple linear regression were checked. While minor deviations in linearity and homoscedasticity were observed, they were within acceptable bounds. No issues with multicollinearity or influential observations were detected.
+
