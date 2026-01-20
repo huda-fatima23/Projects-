@@ -1,0 +1,526 @@
+####################################################################################
+# Project name : "Final Project"
+
+# Code author name : Huda Fatima, Mohd Adnaan Khan, Amina Khatun
+
+# Course: HDS 5310 
+
+# Project Purpose: The purpose of this project is to examine how environmental and social determinants—including air pollution (e.g., PM2.5), land development, and socioeconomic conditions—are associated with lung cancer incidence across U.S. counties.
+
+# Date last edited : 04-29-2025
+
+####################################################################################
+```{r}
+#load the neccesary libraries 
+library(tidyverse)
+library(car)
+library(lmtest)
+library(readxl)
+library(dplyr)
+library(ggplot2)
+```
+
+```{r}
+#load the dataset 
+lung.cancer.incidence <- read_excel("C:/Users/drhud/Downloads/Data_Set_Final_LTD_Slope_Intercept (1).xlsx")
+```
+
+```{r}
+#View the first few rows of the dataset to get an overview of the structure and values
+head(lung.cancer.incidence)
+```
+```{r}
+#View the last few rows of the dataset to check for any trailing NA values or inconsistencies
+tail(lung.cancer.incidence)
+```
+```{r}
+#Generate summary statistics for each variable
+summary(lung.cancer.incidence)
+```
+
+```{r}
+#Select relevant variables for analysis from the dataset
+# These include lung cancer incidence, air pollution metrics (PM2.5, PM10, NO2, SO2, O3, CO), 
+# environmental quality indices (Air_EQI, Sociod_EQI, Built_EQI), and region type (RT)
+lung.cancer <- lung.cancer.incidence %>%
+  select("Lung Cancer", "PM2.5", "PM10", "NO2", "SO2", "O3", "CO", "Air_EQI","Sociod_EQI", "Built_EQI", "RT")
+```
+
+
+```{r}
+#  Check the structure of the selected data frame to confirm variable types and names
+str(lung.cancer)
+```
+```{r}
+# Convert Region Type (RT) to a factor, and ensure all other selected variables are numeric
+# This step is important for consistent data types before statistical analysis
+lung.cancer <- lung.cancer %>%
+  mutate(
+    RT = as.factor(RT),
+    `Lung Cancer` = as.numeric(`Lung Cancer`),
+    `PM2.5` = as.numeric(`PM2.5`),
+    PM10 = as.numeric(PM10),
+    NO2 = as.numeric(NO2),
+    SO2 = as.numeric(SO2),
+    O3 = as.numeric(O3),
+    CO = as.numeric(CO),
+    Air_EQI = as.numeric(Air_EQI),
+    Sociod_EQI = as.numeric(Sociod_EQI),
+    Built_EQI = as.numeric(Built_EQI)
+  )
+```
+
+```{r}
+# Recheck the structure to confirm successful type conversions
+str(lung.cancer)
+```
+```{r}
+# Remove rows with invalid region type indicated by "*"
+# This step ensures data quality by removing potential place holder or undefined categories
+lung.cancer <- lung.cancer %>%
+  filter(RT != "*")
+
+lung.cancer$RT <- droplevels(lung.cancer$RT)
+```
+
+```{r}
+# Summarize the cleaned dataset
+summary(lung.cancer)
+```
+```{r}
+# Generate Q-Q plots to visually assess the normality of continuous variables.
+# If the data points roughly follow the reference line, the variable is approximately normally distributed.
+# Normality helps determine which descriptive statistics to use:
+# If normally distributed: use mean and standard deviation (SD)
+# If not normally distributed: use median and interquartile range (IQR)
+
+# Q-Q plot for Lung Cancer
+qqnorm(lung.cancer$`Lung Cancer`, main = "Q-Q Plot: Lung Cancer Incidence")
+qqline(lung.cancer$`Lung Cancer`)
+
+# Q-Q plot for PM2.5
+qqnorm(lung.cancer$`PM2.5`, main = "Q-Q Plot: PM2.5")
+qqline(lung.cancer$`PM2.5`)
+
+# Q-Q plot for PM10
+qqnorm(lung.cancer$PM10, main = "Q-Q Plot: PM10")
+qqline(lung.cancer$PM10)
+
+# Q-Q plot for NO2
+qqnorm(lung.cancer$NO2, main = "Q-Q Plot: NO2")
+qqline(lung.cancer$NO2)
+
+# Q-Q plot for SO2
+qqnorm(lung.cancer$SO2, main = "Q-Q Plot: SO2")
+qqline(lung.cancer$SO2)
+
+# Q-Q plot for O3
+qqnorm(lung.cancer$O3, main = "Q-Q Plot: O3")
+qqline(lung.cancer$O3)
+
+# Q-Q plot for CO
+qqnorm(lung.cancer$CO, main = "Q-Q Plot: CO")
+qqline(lung.cancer$CO)
+
+# Q-Q plot for Air_EQI
+qqnorm(lung.cancer$Air_EQI, main = "Q-Q Plot: Air EQI")
+qqline(lung.cancer$Air_EQI)
+
+# Q-Q plot for Sociod_EQI
+qqnorm(lung.cancer$Sociod_EQI, main = "Q-Q Plot: Sociodemographic EQI")
+qqline(lung.cancer$Sociod_EQI)
+
+# Q-Q plot for Built_EQI
+qqnorm(lung.cancer$Built_EQI, main = "Q-Q Plot: Built EQI")
+qqline(lung.cancer$Built_EQI)
+
+```
+```{r}
+# Calculate summary statistics (mean & SD or median & IQR based on distribution)
+lung_summary <- lung.cancer %>%
+  summarise(
+    mean_lung_cancer = mean(`Lung Cancer`, na.rm = TRUE),
+    sd_lung_cancer = sd(`Lung Cancer`, na.rm = TRUE),
+
+    mean_pm2_5 = mean(`PM2.5`, na.rm = TRUE),
+    sd_pm2_5 = sd(`PM2.5`, na.rm = TRUE),
+
+    mean_pm10 = mean(PM10, na.rm = TRUE),
+    sd_pm10 = sd(PM10, na.rm = TRUE),
+
+    mean_so2 = mean(SO2, na.rm = TRUE),
+    sd_so2 = sd(SO2, na.rm = TRUE),
+
+    mean_o3 = mean(O3, na.rm = TRUE),
+    sd_o3 = sd(O3, na.rm = TRUE),
+
+    mean_co = mean(CO, na.rm = TRUE),
+    sd_co = sd(CO, na.rm = TRUE),
+
+    median_no2 = median(NO2, na.rm = TRUE),
+    iqr_no2 = IQR(NO2, na.rm = TRUE),
+
+    mean_air_eqi = mean(Air_EQI, na.rm = TRUE),
+    sd_air_eqi = sd(Air_EQI, na.rm = TRUE),
+
+    mean_sociod_eqi = mean(Sociod_EQI, na.rm = TRUE),
+    sd_sociod_eqi = sd(Sociod_EQI, na.rm = TRUE),
+
+    mean_built_eqi = mean(Built_EQI, na.rm = TRUE),
+    sd_built_eqi = sd(Built_EQI, na.rm = TRUE)
+  )
+
+lung_summary
+```
+
+```{r}
+# Frequency count of Region Type (RT)
+table(lung.cancer$RT)
+
+# Percentage distribution of Region Type (RT)
+prop.table(table(lung.cancer$RT)) * 100
+
+```
+
+## BIVARIATE ANALYSIS: PM2.5 and Lung Cancer Incidence:
+
+#Assumptions for Pearson Correlation:
+
+ASSUMPTION 1 - Independence of Observations :Each row in the dataset represents a unique county. There are no repeated measures or clustering, so this ASSUMPTION is MET.
+
+ASSUMPTION 2- Both Variables are Continuous : PM2.5 (particulate matter concentration) and Lung Cancer incidence are continuous variables.
+This ASSUMPTION is MET.
+
+ASSUMPTION 3 - Normal Distribution of Both Variables: We assess this using Q-Q plots for both PM2.5 and Lung Cancer incidence.
+
+```{r}
+# Q-Q plot to assess normality of Lung Cancer Incidence
+ggplot(lung.cancer, aes(sample = `Lung Cancer`)) +
+  stat_qq(alpha = 0.4, color = "#7A74AC") +
+  stat_qq_line(color = "gray40", size = 1) +
+  labs(
+    title = "Q-Q Plot of Lung Cancer Incidence",
+    x = "Theoretical Normal Distribution",
+    y = "Observed Values"
+  ) +
+  theme_minimal()
+
+```
+#Interpretation of Q-Q Plot: Lung Cancer Incidence
+The Q-Q plot shows that most of the data points for lung cancer incidence fall closely along the reference line, with only mild deviations at the upper end. This indicates that the variable is approximately normally distributed, thereby meeting the assumption of normality required for parametric tests such as the Pearson correlation.
+```{r}
+# Q-Q plot to assess normality of PM2.5
+ggplot(lung.cancer, aes(sample = `PM2.5`)) +
+  stat_qq(alpha = 0.4, color = "#7A74AC") +
+  stat_qq_line(color = "gray40", size = 1) +
+  labs(
+    title = "Q-Q Plot of PM2.5 Concentration",
+    x = "Theoretical Normal Distribution",
+    y = "Observed Values"
+  ) +
+  theme_minimal()
+
+```
+# Interpretation of Q-Q Plot: PM2.5 Concentration
+The Q-Q plot for PM2.5 concentration shows some slight deviations from the reference line in the lower and middle portions. However, the overall pattern still closely follows the line, indicating that the data is approximately normally distributed and meets the assumption of normality for Pearson correlation.
+
+ASSUMPTION 4 - Linearity : A scatterplot with a linear regression line and LOESS curve is used to visually check if a linear relationship exists.
+```{r}
+# Scatterplot to check linear relationship between PM2.5 and Lung Cancer
+library(ggplot2)
+
+# Create the base plot
+ggplot(lung.cancer, aes(x = `PM2.5`, y = `Lung Cancer`)) +
+  geom_point(alpha = 0.4, color = "purple") +
+  geom_smooth(method = "lm", se = FALSE, aes(color = "Linear Fit")) +
+  geom_smooth(method = "loess", se = FALSE, aes(color = "LOESS Curve")) +
+
+  # Customize the plot labels and theme
+  labs(
+    title = "Linearity Check: PM2.5 vs Lung Cancer Incidence",
+    x = "PM2.5 Concentration (µg/m³)",
+    y = "Lung Cancer Incidence (per 100,000)",
+    color = "Line Type"  # Legend title
+  ) +
+  scale_color_manual(values = c("Linear Fit" = "black", "LOESS Curve" = "deeppink")) +
+  theme_minimal()
+
+```
+
+#Interpretation of Linearity Check: PM2.5 vs Lung Cancer Incidence
+The scatterplot with both linear and LOESS trend lines shows a generally positive association between PM2.5 concentration and lung cancer incidence. While the LOESS curve indicates slight non-linear behavior at the extremes (lower and higher PM2.5 values), the linear regression line adequately captures the overall trend. Since the majority of the data points follow a roughly linear path, the assumption of linearity is reasonably met for the purposes of Pearson correlation.
+
+ASSUMPTION 5 - Homoscedasticity (Equal Variance): We assess the assumption of homoscedasticity using a visual method, specifically the Residuals vs Fitted Values plot.
+
+```{r}
+
+# Fit a simple linear model for Pearson correlation visualization
+model_homo <- lm(`Lung Cancer` ~ `PM2.5`, data = lung.cancer)
+
+# Load required library
+library(ggplot2)
+library(broom)
+
+# Extract residuals and fitted values
+resid_df <- augment(model_homo)
+
+# Plot residuals vs fitted values
+ggplot(resid_df, aes(x = .fitted, y = .resid)) +
+  geom_point(alpha = 0.5, color = "purple") +
+  geom_hline(yintercept = 0, color = "red", linetype = "dashed") +
+  labs(
+    title = "Residuals vs Fitted Values (Homoscedasticity Check)",
+    x = "Fitted Values (Predicted Lung Cancer Incidence)",
+    y = "Residuals"
+  ) +
+  theme_minimal()
+
+```
+#Interpretation:
+The residuals appear to be evenly scattered around the horizontal line across the range of fitted values, with no clear systematic pattern or funnel shape. This indicates that the variance of residuals remains relatively constant, suggesting that the assumption of homoscedasticity is reasonably satisfied.
+
+# All assumptions for Pearson correlation were checked and met:
+# 1. Both variables (PM2.5 and Lung Cancer) are continuous
+# 2. Observations are independent
+# 3. Both variables are approximately normally distributed (via Q-Q plots)
+# 4. The relationship between variables is approximately linear (confirmed by scatterplot)
+# 5. The residuals show no clear pattern, indicating homoscedasticity (constant variance)
+
+# Therefore, we proceed with the Pearson correlation test
+```{r}
+# Pearson correlation between PM2.5 and Lung Cancer
+cor.test(lung.cancer$`PM2.5`, lung.cancer$`Lung Cancer`, method = "pearson")
+
+```
+#Interpretation of Pearson Correlation:
+A Pearson correlation was conducted to assess the linear association between PM2.5 concentration and lung cancer incidence. The results showed a moderate positive correlation (r = 0.453, 95% CI [0.421, 0.483]), which was statistically significant (p < .001).
+
+This indicates that as PM2.5 levels increase, lung cancer incidence also tends to increase.
+All assumptions for Pearson correlation were reasonably met,
+
+#Bivariate Visualization: PM2.5 and Lung Cancer Incidence
+To visually explore the relationship between PM2.5 concentration and lung cancer incidence, we created a scatterplot with a fitted linear trend line. This visualization helps illustrate the strength and direction of the association, supports the interpretation of the Pearson correlation results, and allows for quick identification of linear patterns or potential outliers across observations.
+```{r}
+# Scatterplot to visualize the bivariate relationship between PM2.5 and Lung Cancer Incidence
+ggplot(lung.cancer, aes(x = `PM2.5`, y = `Lung Cancer`)) +
+  geom_point(alpha = 0.4, color = "#7A74AC") +
+  geom_smooth(method = "lm", se = FALSE, color = "black") +
+  labs(
+    title = "Scatterplot: PM2.5 vs Lung Cancer Incidence",
+    x = "PM2.5 Concentration (µg/m³)",
+    y = "Lung Cancer Incidence (per 100,000)"
+  ) +
+  theme_minimal()
+
+```
+#Interpretation of Bivariate Visualization: PM2.5 vs Lung Cancer Incidence
+The scatterplot illustrates the relationship between PM2.5 concentration (µg/m³) and lung cancer incidence (per 100,000). Each point represents an observation (e.g., a county).
+
+The plot shows a positive linear trend, as visualized by the fitted regression line. As PM2.5 levels increase, lung cancer incidence also tends to rise. The clustering of points along an upward trajectory suggests a moderate positive association, consistent with the Pearson correlation result (r = 0.453).
+
+This visualization supports the interpretation that higher levels of fine particulate air pollution (PM2.5) are associated with higher lung cancer rates across the observed regions.
+
+#BIVARIATE ANALYSIS: PM2.5 and Regional Trend (RT)
+Assumptions for One-Way ANOVA (Tested Before ANOVA)
+ASSUMPTION 1 – Independence of Observations:
+Each row in the dataset represents a unique county assigned to only one RT group. There are no repeated measures or clustering.
+This ASSUMPTION is MET.
+
+ASSUMPTION 2 – Dependent Variable is Continuous:
+PM2.5 (particulate matter concentration) is a continuous variable.
+This ASSUMPTION is MET.
+
+ASSUMPTION 3 – Categorical Independent Variable:
+RT (Regional trends) is a categorical variable with three levels: falling, rising, and stable.
+This ASSUMPTION is MET.
+
+ASSUMPTION 4 – Normality of Residuals Within Groups:
+Assessed using Shapiro-Wilk test for PM2.5 in each RT group.
+
+```{r}
+# Check normality of PM2.5 within each Regional Trends (RT) group using Shapiro-Wilk test
+# Assesses whether PM2.5 values are approximately normally distributed within each group
+# Required assumption check before running ANOVA
+shapiro.test(lung.cancer$`PM2.5`[lung.cancer$RT == "falling"])
+shapiro.test(lung.cancer$`PM2.5`[lung.cancer$RT == "rising"])
+shapiro.test(lung.cancer$`PM2.5`[lung.cancer$RT == "stable"])
+
+```
+# Interpretation
+Based on the p-values, the assumption of normality is met for the falling and rising groups.
+However, the stable group significantly deviates from normality (p < 0.001), violating the normality assumption.
+
+
+ASSUMPTION 5 – Homogeneity of Variance:
+Evaluated using Levene’s Test.
+```{r}
+#levene's test for assumption of homogeneity of variance 
+library(car)
+leveneTest(`PM2.5` ~ RT, data = lung.cancer)
+
+```
+#Interpretation of Levene’s Test for Homogeneity of Variance 
+Levene’s Test was conducted to assess the assumption of homogeneity of variance across the three Regional trends (RT) groups for PM2.5 levels. The test result, F(2, 2552) = 3.23, with a p-value of 0.03985, was statistically significant (p < 0.05). Therefore, we reject the null hypothesis of equal variances, indicating that the assumption of homogeneity of variance is violated. 
+
+Based on this outcome, Welch’s ANOVA was selected as the appropriate method for comparing group means, as it is robust to violations of variance equality and unequal sample sizes.
+```{r}
+# Perform Welch's ANOVA to compare PM2.5 across RT groups
+oneway.test(`PM2.5` ~ RT, data = lung.cancer, var.equal = FALSE)
+
+```
+#Interpretation 
+A Welch’s ANOVA was conducted to determine whether there are significant differences in PM2.5 concentrations across the three Regional trends (RT) groups (falling, rising, and stable), without assuming equal variances. The test result was statistically significant, F(2, 118.94) = 4.13, p = 0.01849, indicating that the mean PM2.5 levels are not equal across all groups. Since the p-value is less than 0.05, we reject the null hypothesis and conclude that at least one RT group differs significantly in its average PM2.5 concentration. 
+
+# Post Hoc Analysis: Pairwise Comparisons Between RT Groups (Welch’s t-test with Bonferroni Adjustment)
+Following a statistically significant Welch ANOVA, post hoc pairwise Welch t-tests with Bonferroni correction were conducted to identify which Regional trends (RT) groups differed significantly in their mean PM2.5 concentrations.
+```{r}
+#Pairwise Comparisons Between RT Groups (Welch’s t-test with Bonferroni Adjustment)
+pairwise.t.test(lung.cancer$`PM2.5`, lung.cancer$RT, 
+                p.adjust.method = "bonferroni", 
+                pool.sd = FALSE)
+
+```
+
+# Interpretation 
+The results indicated a statistically significant difference between the Rising and Stable groups (p = 0.046), suggesting that these two RT categories had significantly different PM2.5 levels after adjusting for multiple comparisons.
+No significant differences were observed between:
+Falling vs Rising (p = 0.567)
+Falling vs Stable (p = 0.364)
+
+```{r}
+# Create boxplot
+ggplot(lung.cancer, aes(x = RT, y = `PM2.5`, fill = RT)) +
+  geom_boxplot(alpha = 0.7, outlier.color = "black") +
+  labs(
+    title = "Boxplot of PM2.5 Concentration by Region Type",
+    x = "Region Type (RT)",
+    y = "PM2.5 Concentration (µg/m³)"
+  ) +
+  scale_fill_brewer(palette = "Pastel1") +
+  theme_minimal()
+
+```
+#Interpretation 
+Interpretation:
+The boxplot illustrates the distribution of PM2.5 across the falling, rising, and stable regional trends.
+The stable group shows a slightly higher median PM2.5 than the rising group.
+The rising vs. stable difference aligns with the significant post hoc test result (p = 0.046).
+Variations in the spread of data suggest unequal variances, which supports the use of Welch’s ANOVA.
+This visual supports the Welch ANOVA result and post hoc test, which found a statistically significant difference in PM2.5 levels between the rising and stable groups (p = 0.046), while the other group comparisons were not significant.
+
+# MULTIVARIATE ANALYSIS - Multiple Linear Regression 
+
+A multiple linear regression model was constructed to explore the relationship between log-transformed lung cancer incidence and four log-transformed predictors: PM2.5, CO, Sociod_EQI and Built_EQI.
+```{r}
+#  Log-transform variables (if not already done)
+lung.cancer <- lung.cancer %>%
+  mutate(
+    log_LungCancer = log(`Lung Cancer` + 1),
+    log_PM2_5 = log(`PM2.5` + 1),
+    log_CO = log(CO + 1),
+    log_Sociod_EQI = log(Sociod_EQI + abs(min(Sociod_EQI, na.rm = TRUE)) + 1),
+    log_Built_EQI = log(Built_EQI + abs(min(Built_EQI, na.rm = TRUE)) + 1)
+  )
+
+```
+```{r}
+ #Fit the multiple linear regression model
+
+model_final <- lm(log_LungCancer ~ log_PM2_5 + log_CO +
+                    log_Sociod_EQI + log_Built_EQI,
+                  data = lung.cancer)
+
+summary(model_final)
+```
+
+#Assumption 1 – Independence of Observations
+Observations should be independent of one another. This means there are no repeated measures or clustering within the dataset.
+ASSUMPTION IS MET 
+
+#ASSUMPTION 2 - Linearity
+There must be a linear relationship between each continuous predictor and the outcome variable.
+
+```{r}
+library(car)
+crPlots(model_final)
+
+```
+#interpretation 
+The component + residual plots were used to assess the linearity assumption for each predictor in the multiple linear regression model. For log_PM2_5, the pink LOESS curve closely follows the linear trend line, with only a slight curve at the higher end, indicating that the linearity assumption is met. Similarly, log_CO shows a flat LOESS curve aligned with the regression line, supporting a good linear fit. For log_Sociod_EQI, there is minor curvature on the right side, but the overall relationship still appears approximately linear, suggesting a mild but acceptable deviation. In the case of log_Built_EQI, the LOESS curve curves downward slightly at the right tail, hinting at potential non-linearity at higher values, though the deviation is not severe. Overall, the linearity assumption is considered MET or reasonably satisfied for all predictors based on visual diagnostics. 
+
+#Assumption 3 – Homoscedasticity
+Verified using Residual vs Fitted plot
+```{r}
+plot(model_final$fitted.values, resid(model_final),
+     xlab = "Fitted Values",
+     ylab = "Residuals",
+     main = "Residuals vs Fitted Values")
+abline(h = 0, col = "red")
+
+```
+# Interpretation :
+While the residuals vs fitted values plot shows a slight increase in spread as fitted values increase, the overall pattern is not extreme.
+The points are still mostly centered around zero without severe funneling or curvature.
+Therefore, the assumption of homoscedasticity is “approximately met,” though mild heteroscedasticity is present.
+
+#Assumption 4 – Normality of Residuals
+The residuals should be approximately normally distributed. Checked using Q-Q plots
+```{r}
+
+# Q-Q Plot of residuals
+residuals_df <- data.frame(residuals = resid(model_final))
+
+ggplot(residuals_df, aes(sample = residuals)) +
+  stat_qq(alpha = 0.5, color = "#7A74AC") +
+  stat_qq_line(color = "gray40", size = 1) +
+  labs(
+    title = "Q-Q Plot of Residuals",
+    x = "Theoretical Quantiles",
+    y = "Sample Quantiles"
+  ) +
+  theme_minimal()
+
+
+```
+#Conclusion :
+The Q-Q plot of residuals shows that the residuals are approximately normally distributed, with only minor deviations at the tails. These small departures are not uncommon in large datasets and do not seriously violate the normality assumption.
+Therefore, the assumption of normality is considered reasonably met for the purpose of linear regression.
+
+# Assumption 5 – No Multicollinearity
+Predictor variables should not be highly correlated with each other. Checked using VIF values; all VIF < 3 — assumption met.
+```{r}
+# Check VIF values for each predictor
+library(car)
+vif(model_final)
+
+```
+All VIF values are well below the common thresholds of 3 (liberal) or 5–10 (conservative), indicating that there is no problematic multicollinearity among the predictor variables.
+Therefore, the assumption of no multicollinearity is met.
+
+#Assumption 6 – No Multivariate Outliers
+Cook’s distance was plotted to detect influence points.
+```{r}
+# Cook's Distance Plot
+plot(cooks.distance(model_final), type = "h",
+     main = "Cook's Distance",
+     ylab = "Cook's Distance")
+abline(h = 4 / length(resid(model_final)), col = "red", lty = 2)
+
+```
+# Interpretation  :
+The Cook’s Distance plot indicates that most observations do not exert undue influence on the model.
+Although one observation has a slightly elevated influence, it does not exceed the commonly used threshold of 1, and is therefore not considered a highly influential outlier.
+Assumption is considered met.
+
+# Conclusion: Multiple Linear Regression Model
+A multiple linear regression was conducted to examine the association between log-transformed lung cancer incidence and the predictors: log_PM2.5, log_CO, log_Sociod_EQI, and log_Built_EQI.
+
+The overall model was statistically significant, F(4, 2548) = 169.1, p < .001, with an adjusted R² of 0.283, indicating that approximately 28.3% of the variance in log lung cancer incidence was explained by the predictors.
+
+Among the predictors:
+
+log_PM2.5 and log_Sociod_EQI were positively and significantly associated with lung cancer incidence. As PM2.5 and sociodemographic EQI levels  increase, the incidence of lung cancer also increases
+
+log_Built_EQI and log_CO showed significant negative associations with lung cancer incidence. Regions with better infrastructure, housing, and urban design may have lower lung cancer rates. And in case of CO may be higher in rural areas with fewer cancer diagnoses,
+
+All assumptions of multiple linear regression were checked. While minor deviations in linearity and homoscedasticity were observed, they were within acceptable bounds. No issues with multicollinearity or influential observations were detected.
