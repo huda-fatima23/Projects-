@@ -33,7 +33,7 @@ This repository contains machine learning and statistical analysis projects focu
 - Methods: Regression Analysis, Correlation Matrices, Data Visualization
 
 ## Tools & Technologies
-Python, R, SQL  
+Python, R
 Pandas, NumPy, Scikit-learn  
 Matplotlib, Seaborn  
 Machine Learning & Statistical Modeling
