@@ -28,6 +28,43 @@ This repository contains machine learning and statistical analysis projects focu
 - Goal: Study association between PM2.5, NO2, SO2 and lung cancer trends.
 - Methods: Regression Analysis, Correlation Matrices, Data Visualization
 
+### 5. Capstone Project : Predicting Chronic Kidney Disease Using Machine Learning Models and Clinical Predictors
+
+## Project Overview
+Chronic Kidney Disease (CKD) affects millions worldwide and often progresses without noticeable symptoms until advanced stages. Early identification of high-risk patients can improve treatment outcomes and reduce healthcare burden.
+This project develops and compares multiple machine learning models to predict CKD using clinical and laboratory variables. The study aims to identify the most important predictors of CKD and determine which machine learning algorithm provides the best predictive performance.
+
+## Data Source
+Dataset: UCI Machine Learning Repository – Chronic Kidney Disease Dataset
+400 patient records
+24 clinical and laboratory variables
+Publicly available and de-identified dataset
+No protected health information (PHI) included
+Dataset Link:
+https://archive.ics.uci.edu/dataset/336/chronic+kidney+disease
+
+## Methods
+- Data Cleaning & Preprocessing
+- Exploratory Data Analysis (EDA)
+- Logistic Regression
+- K-Nearest Neighbors (KNN)
+- Decision Tree
+- Random Forest
+- AdaBoost
+- XGBoost
+- Extra Trees
+
+## Evaluation Metrics
+- Accuracy
+- Precision
+- Recall
+- F1-Score
+- ROC-AUC
+
+## Current Status
+🚧 Project In Progress
+
+
 ## Tools & Technologies
 Python, R
 Pandas, NumPy, Scikit-learn  
