@@ -1,0 +1,7 @@
+Medical Condition,total_admissions,average_length_of_stay,average_billing
+Asthma,9185,15.7,25635.25
+Obesity,9231,15.5,25805.97
+Hypertension,9245,15.5,25497.1
+Cancer,9227,15.5,25161.79
+Arthritis,9308,15.5,25497.33
+Diabetes,9304,15.4,25638.41

@@ -1,0 +1,11 @@
+Name,Age,Gender,Blood Type,Medical Condition,Date of Admission,Doctor,Hospital,Insurance Provider,Billing Amount,Room Number,Admission Type,Discharge Date,Medication,Test Results
+NIcOlE mATTHEws,27,Male,A-,Obesity,2019-05-08,Gregory Burns,"Tanner, and Huang Brown",Cigna,28631.502116015028,294,Urgent,2019-05-09,Ibuprofen,Abnormal
+JEnNifer boYD,20,Male,AB-,Asthma,2019-05-09,Jessica Cook,"Hayes and Hanna Hudson,",Cigna,23757.73695083784,297,Elective,2019-05-10,Paracetamol,Normal
+MoRGAn LAnE,68,Male,B+,Hypertension,2019-05-08,Charles Anderson,Sanford-Nelson,Medicare,35813.067849074359,382,Elective,2019-05-10,Ibuprofen,Inconclusive
+Mrs. MaRIA patRicK,49,Male,O+,Cancer,2019-05-08,Paula Wells,"Allen, Quinn Mitchell and",UnitedHealthcare,4360.7958606117281,131,Urgent,2019-05-10,Lipitor,Inconclusive
+lAurA sTephenS,59,Male,B-,Diabetes,2019-05-09,Sarah Thomas,"and Singleton Wells, Glass",Blue Cross,17611.588185942343,474,Emergency,2019-05-10,Penicillin,Abnormal
+JENNIfEr kNighT,74,Female,O+,Obesity,2019-05-10,Wendy Nichols,Young-Humphrey,Blue Cross,45466.562858002966,487,Urgent,2019-05-11,Ibuprofen,Inconclusive
+JaNet pArKer,65,Male,B+,Hypertension,2019-05-10,Mary Brown,Young-Yates,Cigna,25850.878329135125,198,Urgent,2019-05-11,Paracetamol,Inconclusive
+ANGEla hoFFMAN,28,Female,O-,Obesity,2019-05-11,Melissa Riley,Black LLC,Blue Cross,5639.08738642286,107,Emergency,2019-05-12,Ibuprofen,Normal
+kImbeRLY MaRtINEZ,83,Female,O+,Hypertension,2019-05-11,Jason Patterson,"Garcia Stone, and Gallegos",UnitedHealthcare,10419.44051182184,411,Elective,2019-05-12,Ibuprofen,Inconclusive
+maRk kELLEY,29,Female,B-,Cancer,2019-05-10,Joanna Blake,Shepard-Klein,Blue Cross,1337.5797913685249,348,Elective,2019-05-12,Paracetamol,Inconclusive
