@@ -36,5 +36,8 @@ The dashboard explores:
 - Data modeling
 - DAX calculations
 - Interactive dashboard development
+## Dashboard Preview
+
+![Diabetes Power BI Dashboard](Diabetes%20Analysis%20dashboard.png)
 - Healthcare data visualization
 - Data-driven insight generation
