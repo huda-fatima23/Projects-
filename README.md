@@ -1,72 +1,57 @@
-# Healthcare Data Science Projects
+# Healthcare Data Science & Analytics Projects
 
-This repository contains machine learning and statistical analysis projects focused on healthcare data. The projects apply data science techniques to analyze clinical datasets, identify disease risk factors, and build predictive models for healthcare outcomes.
+This repository contains healthcare data science and analytics projects using Python, R, SQL, and Power BI. The projects demonstrate experience in statistical analysis, machine learning, data visualization, healthcare data analysis, and interpretation of clinical and public health data.
 
 ## Projects
 
-### 1. Heart Disease Risk Prediction
-- Dataset: UCI Heart Disease Dataset
-- Goal: Predict the presence of heart disease using clinical variables.
-- Methods: Logistic Regression, Random Forest, SVM, KNN
-- Best Model: Random Forest
-- Performance: 82% Accuracy, ROC-AUC = 0.87
+### 1. Diabetes Power BI Analysis
+- **Tool:** Power BI
+- **Goal:** Analyze diabetes-related clinical data and identify patterns associated with diabetes outcomes.
+- **Methods:** Data cleaning, Power Query, data visualization, KPI cards, bar charts, donut charts, scatter plots, and interactive slicers.
+- **Focus:** Transforming clinical data into an interactive dashboard and communicating key healthcare insights.
 
+### 2. Healthcare Admissions & Billing Analysis
+- **Tool:** SQL, Google BigQuery
+- **Dataset:** 55,000+ healthcare admission records
+- **Goal:** Analyze hospital admissions, patient demographics, medical conditions, billing patterns, and healthcare utilization.
+- **Methods:** CTEs, CASE statements, subqueries, aggregations, window functions, and DENSE_RANK.
+- **Focus:** Identifying utilization and financial trends across patient and hospital data.
 
-### 2. PCOS Risk Factor Modeling
-- Dataset: 2000 patient Kaggle dataset
-- Goal: Predict PCOS diagnosis using hormonal and lifestyle features.
-- Methods: Random Forest, SVM, Logistic Regression
-- Feature Selection: RFE, PCA, Tree-Based Importance
+### 3. Socioeconomic & Lung Cancer Analysis
+- **Tool:** R
+- **Goal:** Examine how environmental and socioeconomic factors are associated with lung cancer incidence across U.S. counties.
+- **Methods:** Pearson Correlation, Welch ANOVA, Multiple Linear Regression, regression diagnostics, and data visualization.
+- **R Libraries:** tidyverse, dplyr, ggplot2, car, lmtest, readxl
+- **Focus:** Statistical analysis, model assumption testing, and interpretation of environmental and public health data.
 
-### 3. Lung Cancer Environmental Risk Analysis
-- Dataset: Harvard Dataverse environmental data
-- Goal: Analyze environmental and socioeconomic determinants of lung cancer incidence.
-- Methods: Pearson Correlation, Welch ANOVA, Multiple Linear Regression
+### 4. Heart Disease Risk Prediction
+- **Tool:** Python
+- **Dataset:** UCI Heart Disease Dataset
+- **Goal:** Predict the presence of heart disease using clinical variables.
+- **Methods:** Logistic Regression, Random Forest, Support Vector Machine (SVM), and K-Nearest Neighbors (KNN).
+- **Best Model:** Random Forest
+- **Performance:** 82% Accuracy, ROC-AUC = 0.87
 
-### 4. Air Pollution and Lung Cancer Mortality
-- Dataset: Kaggle, Harvard Dataverse
-- Goal: Study association between PM2.5, NO2, SO2 and lung cancer trends.
-- Methods: Regression Analysis, Correlation Matrices, Data Visualization
+### 5. Lung Cancer Prediction
+- **Tool:** Python
+- **Goal:** Analyze lung cancer risk factors and develop predictive models using healthcare data.
+- **Focus:** Data preprocessing, exploratory data analysis, predictive modeling, and model evaluation.
 
-### 5. Capstone Project : Predicting Chronic Kidney Disease Using Machine Learning Models and Clinical Predictors
+### 6. PCOS Analysis
+- **Tool:** Python
+- **Goal:** Analyze clinical, hormonal, and lifestyle factors associated with PCOS and develop predictive models.
+- **Methods:** Feature selection, Recursive Feature Elimination (RFE), Principal Component Analysis (PCA), and machine learning classification.
+- **Focus:** Identifying important predictors associated with PCOS diagnosis.
 
-## Project Overview
-Chronic Kidney Disease (CKD) affects millions worldwide and often progresses without noticeable symptoms until advanced stages. Early identification of high-risk patients can improve treatment outcomes and reduce healthcare burden.
-This project develops and compares multiple machine learning models to predict CKD using clinical and laboratory variables. The study aims to identify the most important predictors of CKD and determine which machine learning algorithm provides the best predictive performance.
+## Technical Skills Demonstrated
 
-## Data Source
-Dataset: UCI Machine Learning Repository – Chronic Kidney Disease Dataset
-400 patient records
-24 clinical and laboratory variables
-Publicly available and de-identified dataset
-No protected health information (PHI) included
-Dataset Link:
-https://archive.ics.uci.edu/dataset/336/chronic+kidney+disease
-
-## Methods
-- Data Cleaning & Preprocessing
-- Exploratory Data Analysis (EDA)
-- Logistic Regression
-- K-Nearest Neighbors (KNN)
-- Decision Tree
-- Random Forest
-- AdaBoost
-- XGBoost
-- Extra Trees
-
-## Evaluation Metrics
-- Accuracy
-- Precision
-- Recall
-- F1-Score
-- ROC-AUC
-
-## Current Status
-🚧 Project In Progress
-
-
-## Tools & Technologies
-Python, R
+- **Programming:** Python, R, SQL
+- **Data Analysis:** Pandas, NumPy, statistical analysis, exploratory data analysis
+- **Statistical Methods:** Correlation, ANOVA, Multiple Linear Regression
+- **Machine Learning:** Logistic Regression, Random Forest, SVM, KNN
+- **Data Visualization:** Power BI, ggplot2
+- **Database & Querying:** Google BigQuery, SQL
+- **Healthcare Analytics:** Clinical data analysis, environmental health analysis, healthcare utilization, and billing analysis
 Pandas, NumPy, Scikit-learn  
 Matplotlib, Seaborn  
 Machine Learning & Statistical Modeling
